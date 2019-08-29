@@ -32,7 +32,7 @@ async def clickevent(clickevents):
         # TODO: Play with printing value by: now(), current(), value()
         #       See: https://faust.readthedocs.io/en/latest/userguide/tables.html#how-to
         #
-        print(f"{ce.uri}: uri_summary_table[ce.uri].current()")
+        print(f"{ce.uri}: {uri_summary_table[ce.uri].current()}")
 
 
 if __name__ == "__main__":
