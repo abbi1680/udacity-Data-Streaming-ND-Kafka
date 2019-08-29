@@ -14,7 +14,7 @@ class ClickEvent(faust.Record):
     number: int
 
 
-app = faust.App("exercise6", broker="kafka://localhost:9092")
+app = faust.App("exercise7", broker="kafka://localhost:9092")
 clickevents_topic = app.topic("com.udacity.streams.clickevents", value_type=ClickEvent)
 
 #

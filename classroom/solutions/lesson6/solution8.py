@@ -14,24 +14,22 @@ class ClickEvent(faust.Record):
     number: int
 
 
-app = faust.App("exercise7", broker="kafka://localhost:9092")
+app = faust.App("exercise8", broker="kafka://localhost:9092")
 clickevents_topic = app.topic("com.udacity.streams.clickevents", value_type=ClickEvent)
 
 #
-# TODO: Define a tumbling window of 10 seconds
-#       See: https://faust.readthedocs.io/en/latest/userguide/tables.html#how-to
+# TODO: Define a hopping window of 1 minute with a 10-second step
 #
-uri_summary_table = app.Table("uri_summary", default=int)
+uri_summary_table = app.Table("uri_summary", default=int).hopping(
+    size=timedelta(minutes=1),
+    step=timedelta(seconds=10)
+)
 
 
 @app.agent(clickevents_topic)
 async def clickevent(clickevents):
     async for ce in clickevents.group_by(ClickEvent.uri):
         uri_summary_table[ce.uri] += ce.number
-        #
-        # TODO: Play with printing value by: now(), current(), value()
-        #       See: https://faust.readthedocs.io/en/latest/userguide/tables.html#how-to
-        #
         print(f"{ce.uri}: {uri_summary_table[ce.uri].current()}")
 
 
