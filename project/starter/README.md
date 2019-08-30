@@ -72,7 +72,7 @@ To accomplish this, you must complete the following tasks:
 1. Complete the code and configuration in `producers/connectors.py`
 	* Please refer to the [Kafka Connect JDBC Source Connector Configuration Options](https://docs.confluent.io/current/connect/kafka-connect-jdbc/source-connector/source_config_options.html) for documentation on the options you must complete.
 	* You can run this file directly to test your connector, rather than running the entire simulation.
-	* Make sure to use the [Landoop Kafka Connect UI](http://localhost:8084) and [Landoop Kafka Topics UI](http://localhost:8085) to check the status and output of the Connector.
+	* Make sure to use the Kafka Connect API to check the status of the connectors
 	* To delete a misconfigured connector: `CURL -X DELETE localhost:8083/connectors/stations`
 
 ### Step 4: Configure the Faust Stream Processor
@@ -165,6 +165,25 @@ The following directory layout indicates the files that the student is responsib
 
 ## Running and Testing
 
+### Running in a Workspace (preferred)
+
+The workspace environment is already preconfigured with all of the services you need to complete your project. No additional configuration is required.
+
+The following services are available in your environment:
+| Service | Host URL | Docker URL | Username | Password |
+| --- | --- | --- | --- | --- |
+| Public Transit Status | [http://localhost:8888](http://localhost:8888) | n/a | ||
+| Kafka | PLAINTEXT://localhost:9092 | PLAINTEXT://kafka0:9092 |
+| REST Proxy | [http://localhost:8082](http://localhost:8082/) | http://rest-proxy:8082/ |
+| Schema Registry | [http://localhost:8081](http://localhost:8081/ ) | http://schema-registry:8081/ |
+| Kafka Connect | [http://localhost:8083](http://localhost:8083) | http://kafka-connect:8083 |
+| KSQL | [http://localhost:8088](http://localhost:8088) | http://ksql:8088 |
+| PostgreSQL | `jdbc:postgresql://localhost:5432/cta` | `jdbc:postgresql://postgres:5432/cta` | `cta_admin` | `chicago` |
+
+### Running on your Computer 
+
+> **NOTE**: You must [allocate **at least `4gb` RAM** to your docker-compose](https://docs.docker.com/docker-for-mac/#advanced) environment to run locally.
+
 To run the simulation, you must first start up the Kafka ecosystem on their machine utilizing Docker Compose.
 
 ```%> docker-compose up```
@@ -176,9 +195,6 @@ Once docker-compose is ready, the following services will be available:
 | Service | Host URL | Docker URL | Username | Password |
 | --- | --- | --- | --- | --- |
 | Public Transit Status | [http://localhost:8888](http://localhost:8888) | n/a | ||
-| Landoop Kafka Connect UI | [http://localhost:8084](http://localhost:8084) | http://connect-ui:8084 |
-| Landoop Kafka Topics UI | [http://localhost:8085](http://localhost:8085) | http://topics-ui:8085 |
-| Landoop Schema Registry UI | [http://localhost:8086](http://localhost:8086) | http://schema-registry-ui:8086 |
 | Kafka | PLAINTEXT://localhost:9092,PLAINTEXT://localhost:9093,PLAINTEXT://localhost:9094 | PLAINTEXT://kafka0:9092,PLAINTEXT://kafka1:9093,PLAINTEXT://kafka2:9094 |
 | REST Proxy | [http://localhost:8082](http://localhost:8082/) | http://rest-proxy:8082/ |
 | Schema Registry | [http://localhost:8081](http://localhost:8081/ ) | http://schema-registry:8081/ |
@@ -198,6 +214,11 @@ However, when you are ready to verify the end-to-end system prior to submission,
 
 #### To run the `producer`:
 
+##### If using workspace
+1. `cd producers`
+2. `python simulation.py`
+
+##### If using your computer
 1. `cd producers`
 2. `virtualenv venv`
 3. `. venv/bin/activate`
@@ -207,6 +228,12 @@ However, when you are ready to verify the end-to-end system prior to submission,
 Once the simulation is running, you may hit `Ctrl+C` at any time to exit.
 
 #### To run the Faust Stream Processing Application:
+
+##### If using workspace
+1. `cd consumers`
+2. `faust -A faust_stream worker -l info`
+
+##### If using your computer
 1. `cd consumers`
 2. `virtualenv venv`
 3. `. venv/bin/activate`
@@ -215,6 +242,12 @@ Once the simulation is running, you may hit `Ctrl+C` at any time to exit.
 
 
 #### To run the KSQL Creation Script:
+
+##### If using workspace
+1. `cd consumers`
+2. `python ksql.py`
+
+##### If using your computer
 1. `cd consumers`
 2. `virtualenv venv`
 3. `. venv/bin/activate`
@@ -222,8 +255,12 @@ Once the simulation is running, you may hit `Ctrl+C` at any time to exit.
 5. `python ksql.py`
 
 #### To run the `consumer`:
+**NOTE**: Do not run the consumer until you have reached Step 6!
+##### If using workspace
+1. `cd consumers`
+5. `python server.py`
 
-** NOTE **: Do not run the consumer until you have reached Step 6!
+##### If using your computer
 1. `cd consumers`
 2. `virtualenv venv`
 3. `. venv/bin/activate`
