@@ -188,6 +188,8 @@ To run the simulation, you must first start up the Kafka ecosystem on their mach
 
 ```%> docker-compose up```
 
+**NOTE**: Your Docker-Compose environment should have [_at least_ 4GB of RAM allocated](https://docs.docker.com/docker-for-mac/#advanced)!
+
 Docker compose will take a 3-5 minutes to start, depending on your hardware. Please be patient and wait for the docker-compose logs to slow down or stop before beginning the simulation.
 
 Once docker-compose is ready, the following services will be available:
