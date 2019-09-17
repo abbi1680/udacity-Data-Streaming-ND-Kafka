@@ -1,6 +1,6 @@
 #
 # This docker-compose file starts and runs:
-# * A 3-node kafka cluster
+# * A 1-node kafka cluster
 # * A 1-zookeeper ensemble
 # * Schema Registry
 # * Kafka REST Proxy
@@ -103,5 +103,17 @@ services:
       POSTGRES_PASSWORD: "chicago"
       POSTGRES_DB: "cta"
     volumes:
-    - ./producers/data/cta_stations.csv:/tmp/cta_stations.csv
-    - ./load_stations.sql:/docker-entrypoint-initdb.d/load_stations.sql
+    - ./cta_stations.csv:/tmp/cta_stations.csv
+    - ./clicks.csv:/tmp/clicks.csv
+    - ./purchases.csv:/tmp/purchases.csv
+    - ./load_data.sql:/docker-entrypoint-initdb.d/load_data.sql
+
+  purchases:
+    image: fndrplayer13/purchases:0.1.0
+    depends_on:
+    - "connect"
+
+  clicks:
+    image: fndrplayer13/clicks:0.1.0
+    depends_on:
+    - "connect"

@@ -5,6 +5,7 @@ import random
 
 import requests
 from confluent_kafka import avro, Consumer, Producer
+from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.avro import AvroConsumer, AvroProducer, CachedSchemaRegistryClient
 from faker import Faker
 
@@ -30,7 +31,7 @@ class User:
 
 def produce():
     """Produces data into the Kafka Topic"""
-    p = Producer({"bootstrap.servers": "PLAINTEXT://localhost:9092"})
+    p = Producer({"bootstrap.servers": "PLAINTEXT://kafka0:19092"})
 
     # Create an assortment of users by currency and produce them into Kafka
     currency_freq = {
@@ -68,6 +69,16 @@ def produce():
 
 def main():
     """Checks for topic and creates the topic if it does not exist"""
+    client = AdminClient({"bootstrap.servers": "PLAINTEXT://kafka0:19092"})
+    users = NewTopic("com.udacity.streams.users", 10, 1)
+    purchases = NewTopic("com.udacity.streams.purchases", 10, 1)
+    try:
+        client.create_topics([users, purchases])
+    except Exception as e:
+        print(f"encountered error creating topics: {e}")
+    else:
+        print("created topics users and purchases")
+
     try:
         produce()
     except KeyboardInterrupt as e:

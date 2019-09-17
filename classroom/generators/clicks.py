@@ -5,6 +5,7 @@ import random
 
 import requests
 from confluent_kafka import avro, Consumer, Producer
+from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.avro import AvroConsumer, AvroProducer, CachedSchemaRegistryClient
 from faker import Faker
 
@@ -29,7 +30,7 @@ class ClickEvent:
 
 def produce():
     """Produces data into the Kafka Topic"""
-    p = Producer({"bootstrap.servers": "PLAINTEXT://localhost:9092"})
+    p = Producer({"bootstrap.servers": "PLAINTEXT://kafka0:19092"})
 
     pages = [Page() for _ in range(500)]
     for page in pages:
@@ -53,6 +54,16 @@ def produce():
 
 def main():
     """Checks for topic and creates the topic if it does not exist"""
+    client = AdminClient({"bootstrap.servers": "PLAINTEXT://kafka0:19092"})
+    pages = NewTopic("com.udacity.streams.pages", 10, 1)
+    clickevents = NewTopic("com.udacity.streams.clickevents", 10, 1)
+    try:
+        client.create_topics([pages, clickevents])
+    except Exception as e:
+        print(f"encountered error creating topics: {e}")
+    else:
+        print("created topics pages and clickevents")
+
     try:
         produce()
     except KeyboardInterrupt as e:
