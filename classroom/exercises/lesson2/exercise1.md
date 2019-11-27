@@ -7,7 +7,7 @@ will spend some time seeing how Kafka works.
 
 First, let's create a topic
 
-`kafka-topics --create --topic kafka-arch --partitions 1 --replication-factor 1 --bootstrap-server PLAINTEXT://localhost:9092`
+`kafka-topics --create --topic kafka-arch --partitions 1 --replication-factor 1 --zookeeper localhost:2181`
 
 ### <a name="dir"></a>Inspecting the Directory Structure
 
@@ -27,7 +27,7 @@ If you try to open the file ending in `.log` is there anything in it?
 
 Now that we have this topic, let's produce some data into it.
 
-`kafka-console-producer --topic "kafka-arch" --broker-list PLAINTEXT://localhost:9092`
+`kafka-console-producer --topic "kafka-arch" --broker-list localhost:9092`
 
 Produce 5-10 messages.
 
@@ -42,7 +42,7 @@ changed.
 Now that you've seen what a topic with a single partition looks like, let's see what happens if we
 modify the number of partitions
 
-`kafka-topics --alter --topic kafka-arch --partitions 3 --bootstrap-server PLAINTEXT://localhost:9092`
+`kafka-topics --alter --topic kafka-arch --partitions 3 --zookeper localhost:2181`
 
 Try repeating the steps from [the previous section](#dir). How many folders do you see now?
 
